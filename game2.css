@@ -1,0 +1,55 @@
+.mem-box{
+  max-width:620px;margin:auto;padding:26px;border-radius:28px;
+  background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(12px);
+}
+.mem-hud{
+  display:flex;justify-content:space-between;gap:10px;margin-bottom:20px;
+  font-weight:600;color:var(--muted);font-size:.95rem;
+}
+.mem-hud b{color:var(--p2);font-variant-numeric:tabular-nums}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.mem-card{
+  aspect-ratio:1;border:0;padding:0;background:none;perspective:700px;
+  -webkit-tap-highlight-color:transparent;
+}
+.mem-inner{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1);
+}
+.mem-card.flip .mem-inner{transform:rotateY(180deg)}
+.mem-face{
+  position:absolute;inset:0;display:grid;place-items:center;border-radius:18px;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+}
+.mem-front{
+  background:linear-gradient(135deg,rgba(255,92,138,.45),rgba(181,124,255,.4));
+  border:1.5px solid rgba(255,255,255,.22);
+  font-size:1.8rem;color:rgba(255,255,255,.85);
+  box-shadow:inset 0 0 25px rgba(255,92,138,.3);
+  transition:box-shadow .3s,filter .3s;
+}
+.mem-card:hover .mem-front{filter:brightness(1.2);box-shadow:inset 0 0 30px rgba(255,179,71,.5)}
+.mem-back{
+  transform:rotateY(180deg);font-size:clamp(1.8rem,8vw,3rem);
+  background:linear-gradient(160deg,#fff7ee,#ffe3d6);
+  border:1.5px solid rgba(255,255,255,.6);
+}
+.mem-card.matched .mem-back{
+  background:linear-gradient(160deg,#ffe0ec,#ffd2a8);
+  box-shadow:0 0 28px rgba(255,92,138,.7);
+  animation:memPop .5s;
+}
+@keyframes memPop{40%{transform:rotateY(180deg) scale(1.15)}}
+.mem-card.wrong .mem-inner{animation:memShake .45s}
+@keyframes memShake{
+  20%{transform:rotateY(180deg) translateX(-6px)}
+  40%{transform:rotateY(180deg) translateX(6px)}
+  60%{transform:rotateY(180deg) translateX(-4px)}
+  80%{transform:rotateY(180deg) translateX(4px)}
+}
+.mem-msg{text-align:center;color:var(--muted);margin:22px 0 14px;min-height:1.6em}
+.mem-restart{display:block;margin:0 auto}
+@media(max-width:500px){
+  .mem-grid{gap:8px}
+  .mem-box{padding:18px}
+}
