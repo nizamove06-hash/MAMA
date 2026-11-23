@@ -1,24 +1,31 @@
-/* ===== НАСТРОЙКИ ===== */
+/* ===== НАСТРОЙКИ. МЕНЯЙ ЗДЕСЬ ===== */
 const CONFIG = {
-  name: 'ЭЛЬВИНА',
-  since: '2006-01-01T08:00:00',
-  gameSeconds: 25,
+  name: 'РАДИК',
+  since: '2013-01-02T00:00:00',
+  aimSeconds: 20,
   typed: [
-    'игру с сердечками',
-    'шар предсказаний',
-    'письмо с секретом'
+    'проверку реакции',
+    'тир на меткость',
+    'терминал с папиными фразами',
+    'секретный зашифрованный файл'
   ],
-  ballAnswers: [
-    'Определённо да ✨',
-    'Да. И это даже не обсуждается',
-    'Сначала чай ☕, потом решения',
-    'Звёзды говорят: действуй',
-    'Шансы высоки. Как всегда!',
-    'Мама всегда права. Это закон вселенной',
-    'Лучше завтра. Но завтра тоже «да»',
-    'Спроси ещё раз, но с улыбкой 😄',
-    'Вселенная одобряет 🌷',
-    'Да, но возьми с собой тёплую кофту'
+  advice: [
+    'Свет за собой выключай. Я не электростанция.',
+    'Сначала попробуй сам. Потом ещё раз. А потом уже звони папе.',
+    'Всё чинится, если достаточно долго смотреть на это с умным видом.',
+    'Я не ворчу. Я передаю опыт на повышенной громкости.',
+    'Надень куртку. Не тебе холодно, а мне на тебя смотреть холодно.',
+    'Хочешь сделать хорошо — сделай сам. Хочешь сделать быстро — позови папу.',
+    'Главное в жизни — вовремя сказать «ну, посмотрим».',
+    'Деньги не растут на деревьях. Зато на них растут яблоки, а это уже что-то.',
+    'У каждой проблемы есть решение. А у решения есть инструкция, которую никто не читал.',
+    'Запомни: я же говорил. Просто на всякий случай, вдруг пригодится.'
+  ],
+  message: [
+    'Пап, я долго думал, что тебе подарить, и понял: инструмент ты купишь сам, а вот сайт вряд ли :)',
+    'Поэтому я сделал маленький секретный проект, где всё собрано только для тебя.',
+    'Спасибо, что всегда рядом, даже когда мы молчим или спорим. Для меня это важнее, чем кажется.',
+    'P.S. Рекорды в играх пока никто не поставил. Займи первое место.'
   ]
 };
 
@@ -41,7 +48,7 @@ const loadTimer = setInterval(() => {
   $('#loaderBar').style.width = loadVal + '%';
 }, 90);
 
-/* ===== САЛЮТ / КОНФЕТТИ ===== */
+/* ===== САЛЮТ ===== */
 const fx = $('#fx');
 const fctx = fx.getContext('2d');
 let fp = [], fxRun = false;
@@ -53,7 +60,8 @@ function fxResize() {
 fxResize();
 addEventListener('resize', fxResize);
 
-function burst(x, y, n = 80) {
+function burst(x, y, n) {
+  n = n || 80;
   const hue = Math.random() * 360;
   for (let i = 0; i < n; i++) {
     const a = Math.random() * Math.PI * 2;
@@ -96,7 +104,8 @@ function fxLoop() {
   else fxRun = false;
 }
 
-function fireworks(times = 8) {
+function fireworks(times) {
+  times = times || 8;
   for (let i = 0; i < times; i++) {
     setTimeout(() => {
       burst(
@@ -108,9 +117,10 @@ function fireworks(times = 8) {
   }
 }
 
-/* ===== СЕРДЕЧКИ ПРИ КЛИКЕ ===== */
+/* ===== ИСКРЫ ПРИ КЛИКЕ ===== */
 addEventListener('click', e => {
-  const icons = ['❤', '💖', '🌷', '✨', '🌸', '💫'];
+  if (e.target.closest && e.target.closest('.aim-arena')) return;
+  const icons = ['⚡', '⚙', '★', '🔧', '✦', '🔥'];
   for (let i = 0; i < 6; i++) {
     const s = document.createElement('span');
     s.className = 'floater';
@@ -160,7 +170,7 @@ function buildName() {
           ty: y,
           vx: 0,
           vy: 0,
-          hue: 330 + (x / GWd) * 80
+          hue: 25 + (x / GWd) * 165
         });
       }
     }
@@ -192,16 +202,17 @@ function gateLoop() {
     }
     p.x += p.vx;
     p.y += p.vy;
-    gctx.fillStyle = 'hsl(' + (p.hue % 360) + ',95%,68%)';
+    gctx.fillStyle = 'hsl(' + (p.hue % 360) + ',95%,62%)';
     gctx.fillRect(p.x, p.y, 2.6, 2.6);
   }
   requestAnimationFrame(gateLoop);
 }
 gateLoop();
 
-/* ===== УДЕРЖАНИЕ СЕРДЦА ===== */
+/* ===== СКАНЕР ОТПЕЧАТКА ===== */
 const holdBtn = $('#hold');
 const holdBar = $('#holdBar');
+const gateStatus = $('#gateStatus');
 let hp = 0, holding = false, unlocked = false;
 
 function holdLoop() {
@@ -209,7 +220,10 @@ function holdLoop() {
   hp += holding ? 0.012 : -0.02;
   hp = Math.max(0, Math.min(1, hp));
   holdBar.style.strokeDashoffset = 327 * (1 - hp);
-  holdBtn.style.transform = 'scale(' + (1 + hp * 0.25) + ')';
+  holdBtn.style.transform = 'scale(' + (1 + hp * 0.2) + ')';
+  gateStatus.textContent = hp > 0
+    ? 'СКАНИРОВАНИЕ... ' + Math.floor(hp * 100) + '%'
+    : 'ОЖИДАНИЕ ОТПЕЧАТКА';
   if (hp >= 1) unlock();
   else requestAnimationFrame(holdLoop);
 }
@@ -232,6 +246,7 @@ addEventListener('keyup', e => {
 function unlock() {
   unlocked = true;
   exploded = true;
+  gateStatus.textContent = 'ДОСТУП РАЗРЕШЁН ✓';
   gp.forEach(p => {
     const a = Math.random() * Math.PI * 2;
     const s = Math.random() * 14 + 3;
@@ -285,7 +300,7 @@ addEventListener('mousemove', () => {
   ring.style.top = ry + 'px';
   requestAnimationFrame(followRing);
 })();
-$$('a, button, .panel, input, .scratch, .envelope, .ball, .stat').forEach(el => {
+$$('a, button, input, .skill, .time-box').forEach(el => {
   el.addEventListener('mouseenter', () => ring.classList.add('hover'));
   el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
 });
@@ -333,7 +348,7 @@ addEventListener('resize', resize);
       const q = particles[j];
       const dist = Math.hypot(p.x - q.x, p.y - q.y);
       if (dist < 120) {
-        ctx.strokeStyle = 'rgba(255,120,170,' + ((1 - dist / 120) * 0.3) + ')';
+        ctx.strokeStyle = 'rgba(0,212,255,' + ((1 - dist / 120) * 0.3) + ')';
         ctx.lineWidth = 0.8;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
@@ -342,7 +357,7 @@ addEventListener('resize', resize);
       }
     }
     if (d < 180) {
-      ctx.strokeStyle = 'rgba(255,179,71,' + ((1 - d / 180) * 0.55) + ')';
+      ctx.strokeStyle = 'rgba(255,138,31,' + ((1 - d / 180) * 0.6) + ')';
       ctx.beginPath();
       ctx.moveTo(p.x, p.y);
       ctx.lineTo(mx, my);
@@ -403,7 +418,7 @@ const counterIO = new IntersectionObserver(entries => {
     const target = +el.dataset.count;
     const suffix = el.dataset.suffix || '';
     const start = performance.now();
-    const dur = 2200;
+    const dur = 2000;
     (function step(now) {
       const t = Math.min((now - start) / dur, 1);
       const eased = 1 - Math.pow(1 - t, 4);
@@ -414,23 +429,6 @@ const counterIO = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.6 });
 $$('[data-count]').forEach(el => counterIO.observe(el));
-
-/* ===== 3D-НАКЛОН КАРТОЧЕК ===== */
-$$('.tilt').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    const x = e.clientX - r.left;
-    const y = e.clientY - r.top;
-    const rotX = ((y / r.height) - 0.5) * -16;
-    const rotY = ((x / r.width) - 0.5) * 16;
-    card.style.transform = 'perspective(900px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) scale(1.03)';
-    card.style.setProperty('--mx', x + 'px');
-    card.style.setProperty('--my', y + 'px');
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-  });
-});
 
 /* ===== МАГНИТНЫЕ КНОПКИ ===== */
 $$('.magnetic').forEach(el => {
@@ -492,257 +490,331 @@ function updateTime() {
 updateTime();
 setInterval(updateTime, 250);
 
-/* ===== СКРЕТЧ-КАРТЫ ===== */
-$$('.scratch').forEach(box => {
-  const cv = $('canvas', box);
-  const c = cv.getContext('2d');
-  let done = false, drawing = false, lx = 0, ly = 0, moves = 0;
+/* ===== ИГРА 1: РЕАКЦИЯ ===== */
+(function () {
+  const lightsEl = $('#rxLights');
+  const lights = $$('i', lightsEl);
+  const pad = $('#rxPad');
+  const title = $('#rxTitle');
+  const text = $('#rxText');
+  const roundEl = $('#rxRound');
+  const bestEl = $('#rxBest');
+  const avgEl = $('#rxAvg');
+  let state = 'idle', timers = [], t0 = 0, times = [];
 
-  function paint() {
-    cv.width = box.clientWidth;
-    cv.height = box.clientHeight;
-    c.globalCompositeOperation = 'source-over';
-    const grad = c.createLinearGradient(0, 0, cv.width, cv.height);
-    grad.addColorStop(0, '#a9a3bd');
-    grad.addColorStop(0.5, '#efeaf8');
-    grad.addColorStop(1, '#8f8aa8');
-    c.fillStyle = grad;
-    c.fillRect(0, 0, cv.width, cv.height);
-    for (let i = 0; i < 300; i++) {
-      c.fillStyle = 'rgba(255,255,255,' + (Math.random() * 0.5) + ')';
-      c.fillRect(Math.random() * cv.width, Math.random() * cv.height, 2, 2);
+  function clearTimers() {
+    timers.forEach(clearTimeout);
+    timers = [];
+  }
+  function setLights(n) {
+    lights.forEach((l, i) => l.classList.toggle('on', i < n));
+  }
+  function getBest() {
+    try { return +localStorage.getItem('radikRxBest') || 0; } catch (e) { return 0; }
+  }
+  function setBest(v) {
+    try { localStorage.setItem('radikRxBest', v); } catch (e) {}
+  }
+  function showBest() {
+    const b = getBest();
+    bestEl.textContent = b ? b + ' мс' : '—';
+  }
+  showBest();
+
+  function startRound() {
+    clearTimers();
+    state = 'waiting';
+    lightsEl.classList.remove('go');
+    pad.className = 'rx-pad wait';
+    title.textContent = 'Жди зелёный...';
+    text.textContent = 'Не нажимай раньше времени';
+    setLights(0);
+    for (let i = 1; i <= 5; i++) {
+      (function (n) {
+        timers.push(setTimeout(() => setLights(n), n * 650));
+      })(i);
     }
-    c.fillStyle = '#5a5572';
-    c.font = '700 20px "Segoe UI",sans-serif';
-    c.textAlign = 'center';
-    c.textBaseline = 'middle';
-    c.fillText('✦ Сотри, чтобы узнать ✦', cv.width / 2, cv.height / 2);
-  }
-  paint();
-  addEventListener('resize', () => {
-    if (!done) paint();
-  });
-
-  function pos(e) {
-    const r = cv.getBoundingClientRect();
-    return [e.clientX - r.left, e.clientY - r.top];
+    timers.push(setTimeout(go, 5 * 650 + 800 + Math.random() * 2200));
   }
 
-  cv.addEventListener('pointerdown', e => {
-    drawing = true;
-    const p = pos(e);
-    lx = p[0];
-    ly = p[1];
-    cv.setPointerCapture(e.pointerId);
-    scratch(e);
-  });
-  cv.addEventListener('pointermove', scratch);
-  ['pointerup', 'pointercancel'].forEach(ev => {
-    cv.addEventListener(ev, () => { drawing = false; });
-  });
-
-  function scratch(e) {
-    if (!drawing || done) return;
-    const p = pos(e);
-    c.globalCompositeOperation = 'destination-out';
-    c.lineWidth = 48;
-    c.lineCap = 'round';
-    c.beginPath();
-    c.moveTo(lx, ly);
-    c.lineTo(p[0], p[1]);
-    c.stroke();
-    lx = p[0];
-    ly = p[1];
-    moves++;
-    if (moves % 6 === 0) check();
+  function go() {
+    state = 'go';
+    setLights(0);
+    lightsEl.classList.add('go');
+    pad.className = 'rx-pad go';
+    title.textContent = 'ЖМИ!';
+    text.textContent = '';
+    t0 = performance.now();
   }
 
-  function check() {
-    const d = c.getImageData(0, 0, cv.width, cv.height).data;
-    let clear = 0, total = 0;
-    for (let i = 3; i < d.length; i += 64) {
-      total++;
-      if (d[i] === 0) clear++;
+  function finish(avg) {
+    state = 'done';
+    const best = Math.min.apply(null, times);
+    let verdict;
+    if (avg < 220) verdict = 'Реакция пилота Формулы-1 🏎';
+    else if (avg < 300) verdict = 'Отличная реакция 👍';
+    else if (avg < 400) verdict = 'Нормально. Кофе поможет ☕';
+    else verdict = 'Ну... посмотрим 😄';
+    const old = getBest();
+    if (!old || best < old) {
+      setBest(best);
+      verdict += ' Новый рекорд: ' + best + ' мс! 🏆';
     }
-    if (clear / total > 0.5) {
-      done = true;
-      cv.classList.add('gone');
-      const r = box.getBoundingClientRect();
-      burst(r.left + r.width / 2, r.top + r.height / 2, 110);
+    showBest();
+    title.textContent = avg + ' мс в среднем';
+    text.textContent = verdict + ' Нажми, чтобы сыграть снова';
+    if (avg < 250) fireworks(6);
+  }
+
+  function press() {
+    if (state === 'idle' || state === 'done') {
+      times = [];
+      roundEl.textContent = 0;
+      avgEl.textContent = '—';
+      startRound();
+      return;
+    }
+    if (state === 'between' || state === 'fail') {
+      startRound();
+      return;
+    }
+    if (state === 'waiting') {
+      clearTimers();
+      state = 'fail';
+      setLights(0);
+      pad.className = 'rx-pad fail';
+      title.textContent = 'Фальстарт! 😅';
+      text.textContent = 'Слишком рано. Нажми, чтобы повторить раунд';
+      return;
+    }
+    if (state === 'go') {
+      const ms = Math.round(performance.now() - t0);
+      times.push(ms);
+      roundEl.textContent = times.length;
+      const avg = Math.round(times.reduce((a, b) => a + b, 0) / times.length);
+      avgEl.textContent = avg + ' мс';
+      lightsEl.classList.remove('go');
+      pad.className = 'rx-pad';
+      if (times.length < 5) {
+        state = 'between';
+        title.textContent = ms + ' мс';
+        text.textContent = 'Нажми для следующего раунда';
+      } else {
+        finish(avg);
+      }
     }
   }
-});
 
-/* ===== ИГРА «ЛОВИ СЕРДЕЧКИ» ===== */
-const gcv = $('#gameCanvas');
-const g = gcv.getContext('2d');
-const overlay = $('#gameOverlay');
-let GW, GH, items = [], basketX = 0, playing = false;
-let score = 0, timeLeft = 0, lastSpawn = 0, lastT = 0, endAt = 0;
+  pad.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    press();
+  });
+  pad.addEventListener('keydown', e => {
+    if (e.code === 'Space' || e.code === 'Enter') {
+      e.preventDefault();
+      press();
+    }
+  });
+})();
 
-const kinds = [
-  { e: '❤️', p: 1, w: 4 },
-  { e: '🌷', p: 2, w: 2 },
-  { e: '✨', p: 1, w: 2 },
-  { e: '🥦', p: -2, w: 2 }
-];
+/* ===== ИГРА 2: ТИР ===== */
+(function () {
+  const arena = $('#aimArena');
+  const over = $('#aimOverlay');
+  const scoreEl = $('#aimScore');
+  const timeEl = $('#aimTime');
+  const kinds = [
+    { e: '🎯', p: 1, w: 6, life: 1500 },
+    { e: '⭐', p: 3, w: 2, life: 900 },
+    { e: '💣', p: -3, w: 2, life: 1600 }
+  ];
+  let running = false, score = 0, endAt = 0, spawnT = null, tickT = null;
 
-function gResize() {
-  const r = gcv.getBoundingClientRect();
-  GW = gcv.width = r.width;
-  GH = gcv.height = r.height;
-  if (!basketX) basketX = GW / 2;
-}
-gResize();
-addEventListener('resize', gResize);
-
-function pickKind() {
-  const total = kinds.reduce((a, k) => a + k.w, 0);
-  let r = Math.random() * total;
-  for (const k of kinds) {
-    r -= k.w;
-    if (r <= 0) return k;
+  function getBest() {
+    try { return +localStorage.getItem('radikAimBest') || 0; } catch (e) { return 0; }
   }
-  return kinds[0];
-}
-
-function moveBasket(clientX) {
-  const r = gcv.getBoundingClientRect();
-  basketX = Math.max(30, Math.min(GW - 30, clientX - r.left));
-}
-gcv.addEventListener('pointermove', e => moveBasket(e.clientX));
-gcv.addEventListener('pointerdown', e => moveBasket(e.clientX));
-addEventListener('keydown', e => {
-  if (!playing) return;
-  if (e.key === 'ArrowLeft') basketX = Math.max(30, basketX - 40);
-  if (e.key === 'ArrowRight') basketX = Math.min(GW - 30, basketX + 40);
-});
-
-function startGame() {
-  gResize();
-  items = [];
-  score = 0;
-  lastSpawn = 0;
-  playing = true;
-  endAt = performance.now() + CONFIG.gameSeconds * 1000;
-  $('#gScore').textContent = 0;
-  overlay.classList.add('hidden');
-  lastT = performance.now();
-  requestAnimationFrame(gameLoop);
-}
-
-function endGame() {
-  playing = false;
-  let title, text;
-  if (score < 12) {
-    title = 'Хорошая разминка 😄';
-    text = 'Очков: ' + score + '. Брокколи победила этот раунд. Попробуем ещё?';
-  } else if (score < 30) {
-    title = 'Отличный результат! 🌷';
-    text = 'Очков: ' + score + '. Сердечки в надёжных руках. Сможешь побить рекорд?';
-  } else {
-    title = 'РЕКОРД! 🏆';
-    text = 'Очков: ' + score + '. Ловишь сердца профессионально. Салют заслужен!';
-    fireworks(8);
-  }
-  $('#gameTitle').textContent = title;
-  $('#gameText').textContent = text;
-  $('#gameBtn span').textContent = 'Ещё раз';
-  overlay.classList.remove('hidden');
-}
-
-function gameLoop(now) {
-  if (!playing) return;
-  const dt = Math.min((now - lastT) / 16.67, 3);
-  lastT = now;
-  timeLeft = Math.max(0, Math.ceil((endAt - now) / 1000));
-  $('#gTime').textContent = timeLeft;
-  if (now >= endAt) {
-    drawGame();
-    endGame();
-    return;
+  function setBest(v) {
+    try { localStorage.setItem('radikAimBest', v); } catch (e) {}
   }
 
-  const prog = 1 - (endAt - now) / (CONFIG.gameSeconds * 1000);
-  if (now - lastSpawn > 520 - prog * 250) {
-    lastSpawn = now;
-    const k = pickKind();
-    items.push({
-      e: k.e,
-      p: k.p,
-      x: 30 + Math.random() * (GW - 60),
-      y: -30,
-      v: 2.2 + Math.random() * 1.8 + prog * 2
+  function pick() {
+    const total = kinds.reduce((a, k) => a + k.w, 0);
+    let r = Math.random() * total;
+    for (const k of kinds) {
+      r -= k.w;
+      if (r <= 0) return k;
+    }
+    return kinds[0];
+  }
+
+  function spawn() {
+    if (!running) return;
+    const total = CONFIG.aimSeconds * 1000;
+    const prog = 1 - (endAt - Date.now()) / total;
+    const k = pick();
+    const b = document.createElement('button');
+    b.className = 'aim-t';
+    b.textContent = k.e;
+    const w = arena.clientWidth;
+    const h = arena.clientHeight;
+    b.style.left = (10 + Math.random() * (w - 84)) + 'px';
+    b.style.top = (44 + Math.random() * (h - 44 - 74)) + 'px';
+
+    b.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!running || b.dataset.hit) return;
+      b.dataset.hit = '1';
+      score = Math.max(0, score + k.p);
+      scoreEl.textContent = score;
+      const r = b.getBoundingClientRect();
+      if (k.p > 0) burst(r.left + r.width / 2, r.top + r.height / 2, k.p > 1 ? 30 : 14);
+      b.classList.add('hit');
+      setTimeout(() => b.remove(), 220);
     });
+    arena.appendChild(b);
+
+    setTimeout(() => {
+      if (b.parentNode && !b.dataset.hit) {
+        b.classList.add('out');
+        setTimeout(() => b.remove(), 220);
+      }
+    }, k.life * (1 - prog * 0.35));
+
+    spawnT = setTimeout(spawn, 720 - prog * 380);
   }
 
-  const by = GH - 52;
-  const gbox = gcv.getBoundingClientRect();
-  items = items.filter(it => {
-    it.y += it.v * dt;
-    if (it.y > by - 22 && it.y < by + 24 && Math.abs(it.x - basketX) < 46) {
-      score = Math.max(0, score + it.p);
-      $('#gScore').textContent = score;
-      if (it.p > 0) burst(it.x + gbox.left, it.y + gbox.top, 8);
-      return false;
+  function tick() {
+    const left = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
+    timeEl.textContent = left;
+    if (Date.now() >= endAt) end();
+  }
+
+  function start() {
+    score = 0;
+    scoreEl.textContent = 0;
+    arena.innerHTML = '';
+    running = true;
+    endAt = Date.now() + CONFIG.aimSeconds * 1000;
+    timeEl.textContent = CONFIG.aimSeconds;
+    over.classList.add('hidden');
+    spawn();
+    tickT = setInterval(tick, 200);
+  }
+
+  function end() {
+    running = false;
+    clearTimeout(spawnT);
+    clearInterval(tickT);
+    arena.innerHTML = '';
+    let title;
+    if (score < 15) title = 'Разминка 🎯';
+    else if (score < 35) title = 'Хороший глаз! 👌';
+    else {
+      title = 'СНАЙПЕР! 🏆';
+      fireworks(8);
     }
-    return it.y < GH + 40;
+    const old = getBest();
+    let extra = '';
+    if (score > old) {
+      setBest(score);
+      extra = ' Новый рекорд!';
+    }
+    $('#aimTitle').textContent = title;
+    $('#aimText').textContent = 'Очков: ' + score + '. Рекорд: ' + Math.max(score, old) + '.' + extra;
+    $('#aimBtn span').textContent = 'Ещё раз';
+    over.classList.remove('hidden');
+  }
+
+  $('#aimBtn').addEventListener('click', start);
+})();
+
+/* ===== ТЕРМИНАЛ С ФРАЗАМИ ===== */
+(function () {
+  const out = $('#advText');
+  let busy = false, last = -1;
+  $('#advBtn').addEventListener('click', () => {
+    if (busy) return;
+    busy = true;
+    const list = CONFIG.advice;
+    let i;
+    do {
+      i = Math.floor(Math.random() * list.length);
+    } while (i === last && list.length > 1);
+    last = i;
+    const s = list[i];
+    let c = 0;
+    out.textContent = '';
+    (function t() {
+      out.textContent = s.slice(0, c);
+      if (c < s.length) {
+        c++;
+        setTimeout(t, 28);
+      } else {
+        busy = false;
+      }
+    })();
   });
-  drawGame();
-  requestAnimationFrame(gameLoop);
-}
+})();
 
-function drawGame() {
-  g.clearRect(0, 0, GW, GH);
-  g.textAlign = 'center';
-  g.textBaseline = 'middle';
-  g.font = '34px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
-  items.forEach(it => g.fillText(it.e, it.x, it.y));
-  g.font = '58px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
-  g.fillText('🧺', basketX, GH - 48);
-}
-$('#gameBtn').addEventListener('click', startGame);
-drawGame();
+/* ===== СЕКРЕТНЫЙ ФАЙЛ ===== */
+(function () {
+  const box = $('#vaultText');
+  const lock = $('#lock');
+  const status = $('#vaultStatus');
+  const btn = $('#decryptBtn');
+  const fire = $('#fireBtn');
+  const full = CONFIG.message.join('\n\n');
+  const glyphs = '█▓▒░#@$%&*+=<>/|0123456789';
+  let busy = false;
 
-/* ===== ШАР ПРЕДСКАЗАНИЙ ===== */
-const ball = $('#ball');
-const ballText = $('#ballText');
-let ballBusy = false;
+  function glyph() {
+    return glyphs[Math.floor(Math.random() * glyphs.length)];
+  }
 
-function askBall() {
-  if (ballBusy) return;
-  ballBusy = true;
-  ballText.classList.add('out');
-  ball.classList.remove('shake');
-  void ball.offsetWidth;
-  ball.classList.add('shake');
-  setTimeout(() => {
-    const list = CONFIG.ballAnswers;
-    ballText.textContent = list[Math.floor(Math.random() * list.length)];
-    ballText.classList.remove('out');
-  }, 800);
-  setTimeout(() => {
-    ballBusy = false;
-    ball.classList.remove('shake');
-  }, 1150);
-}
-ball.addEventListener('click', askBall);
-$('#ballBtn').addEventListener('click', askBall);
-$('#ballQ').addEventListener('keydown', e => {
-  if (e.key === 'Enter') askBall();
-});
+  function scrambled(p) {
+    const lim = full.length * p;
+    let out = '';
+    for (let i = 0; i < full.length; i++) {
+      const ch = full[i];
+      if (/\s/.test(ch) || i < lim) out += ch;
+      else out += glyph();
+    }
+    return out;
+  }
 
-/* ===== КОНВЕРТ ===== */
-const envelope = $('#envelope');
-envelope.addEventListener('click', () => {
-  if (envelope.classList.contains('open')) return;
-  envelope.classList.add('open');
-  $('#tapHint').classList.add('gone');
-  const r = envelope.getBoundingClientRect();
-  burst(r.left + r.width / 2, r.top + 40, 60);
-  setTimeout(() => $('#letterFull').classList.add('show'), 1000);
-});
-$('#fireBtn').addEventListener('click', () => fireworks(14));
+  box.textContent = scrambled(0);
+  box.classList.add('enc');
+
+  function done() {
+    box.textContent = full;
+    box.classList.remove('enc');
+    lock.classList.remove('shake');
+    lock.textContent = '🔓';
+    status.textContent = 'Статус: расшифровано ✓';
+    status.classList.add('ok');
+    btn.style.display = 'none';
+    fire.classList.add('show');
+    fireworks(6);
+  }
+
+  btn.addEventListener('click', () => {
+    if (busy) return;
+    busy = true;
+    status.textContent = 'Статус: расшифровка...';
+    lock.classList.add('shake');
+    const dur = 5000;
+    const start = performance.now();
+    (function step(now) {
+      const p = Math.min((now - start) / dur, 1);
+      box.textContent = scrambled(p);
+      if (p < 1) requestAnimationFrame(step);
+      else done();
+    })(start);
+  });
+
+  fire.addEventListener('click', () => fireworks(14));
+})();
 
 /* ===== НАВЕРХ ===== */
 $('#toTop').addEventListener('click', () => {
