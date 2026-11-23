@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Эльвина — секретная вселенная</title>
-  <link rel="stylesheet" href="style.css?v=3" />
-  <link rel="stylesheet" href="game2.css?v=3" />
+  <title>Радик — секретный файл</title>
+  <link rel="stylesheet" href="style.css?v=1" />
 </head>
 <body class="locked">
 
   <div class="preloader" id="preloader">
-    <div class="loader-logo">ЭЛЬВИНА</div>
+    <div class="loader-logo">РАДИК</div>
     <div class="loader-bar"><span id="loaderBar"></span></div>
     <div class="loader-num"><span id="loaderNum">0</span>%</div>
   </div>
@@ -22,16 +21,17 @@
 
   <div class="gate" id="gate">
     <canvas id="gateCanvas"></canvas>
-    <p class="gate-top">🔒 Секретный доступ · только для одного человека</p>
+    <p class="gate-top">🔒 Закрытая зона · доступ только для Радика</p>
     <div class="gate-bottom">
-      <button class="hold" id="hold" aria-label="Нажми и удерживай">
+      <button class="hold" id="hold" aria-label="Приложи палец и удерживай">
         <svg viewBox="0 0 120 120">
           <circle class="track" cx="60" cy="60" r="52"></circle>
           <circle class="bar" id="holdBar" cx="60" cy="60" r="52"></circle>
         </svg>
-        <span>❤</span>
+        <span class="fp"></span>
       </button>
-      <p class="gate-hint">Нажми и удерживай сердце</p>
+      <p class="gate-status" id="gateStatus">ОЖИДАНИЕ ОТПЕЧАТКА</p>
+      <p class="gate-hint">Приложи палец к сканеру и удерживай</p>
     </div>
   </div>
 
@@ -41,40 +41,41 @@
   <div class="blob b3"></div>
 
   <header class="header" id="header">
-    <a href="#home" class="logo">ЭЛЬВИНА<span>.</span></a>
+    <a href="#home" class="logo">РАДИК<span>.</span></a>
     <nav class="nav" id="nav">
       <a href="#home">Главная</a>
       <a href="#time">Время</a>
-      <a href="#game">Сердечки</a>
-      <a href="#memory">Пары</a>
-      <a href="#ball">Шар</a>
-      <a href="#letter">Письмо</a>
+      <a href="#skills">Навыки</a>
+      <a href="#reflex">Реакция</a>
+      <a href="#aim">Меткость</a>
+      <a href="#advice">Фразы</a>
+      <a href="#secret">Секрет</a>
     </nav>
     <button class="burger" id="burger" aria-label="Меню"><span></span><span></span></button>
   </header>
 
   <section class="hero" id="home">
     <div class="hero-text">
-      <div class="badge reveal"><i></i> Доступ открыт · режим сюрприза</div>
+      <div class="badge reveal"><i></i> Доступ разрешён · режим сюрприза</div>
       <h1 class="title" id="title">
         <span class="word"><span style="--i:0">Привет,</span></span><br />
-        <span class="word"><span class="grad" style="--i:1">Эльвина!</span></span>
+        <span class="word"><span class="grad" style="--i:1">Радик!</span></span>
       </h1>
       <p class="subtitle reveal">
         Я сделал для тебя: <span class="typed" id="typed"></span><span class="caret">|</span>
       </p>
       <div class="hero-btns reveal">
-        <a href="#game" class="btn primary magnetic"><span>Сыграть в игру 🎮</span></a>
-        <a href="#letter" class="btn ghost magnetic"><span>Открыть письмо ✉️</span></a>
+        <a href="#reflex" class="btn primary magnetic"><span>Проверить реакцию ⏱</span></a>
+        <a href="#secret" class="btn ghost magnetic"><span>Секретный файл 🔐</span></a>
       </div>
     </div>
 
     <div class="scene" id="scene">
       <div class="cube">
-        <div class="face front">❤</div>
-        <div class="face back">✿</div>
-        <div class="face right">★</div>
-        <div class="face left">☾</div>
+        <div class="face front">⚙</div>
+        <div class="face back">★</div>
+        <div class="face right">⚡</div>
+        <div class="face left">♞</div>
         <div class="face top">☀</div>
         <div class="face bottom">✦</div>
       </div>
@@ -87,11 +88,11 @@
 
   <div class="marquee">
     <div class="marquee-track">
-      <span>Эльвина</span><span>✦</span><span>Только для тебя</span><span>✦</span>
-      <span>Сюрприз</span><span>✦</span><span>Мама</span><span>✦</span>
+      <span>Радик</span><span>✦</span><span>Только для тебя</span><span>✦</span>
+      <span>Папа</span><span>✦</span><span>Легенда</span><span>✦</span>
       <span>Нажми на всё</span><span>✦</span>
-      <span>Эльвина</span><span>✦</span><span>Только для тебя</span><span>✦</span>
-      <span>Сюрприз</span><span>✦</span><span>Мама</span><span>✦</span>
+      <span>Радик</span><span>✦</span><span>Только для тебя</span><span>✦</span>
+      <span>Папа</span><span>✦</span><span>Легенда</span><span>✦</span>
       <span>Нажми на всё</span><span>✦</span>
     </div>
   </div>
@@ -99,7 +100,7 @@
   <section class="section" id="time">
     <div class="section-head reveal">
       <small>Живой счётчик</small>
-      <h2>Ты — моя мама уже</h2>
+      <h2>Ты — мой папа уже</h2>
     </div>
     <div class="time-grid reveal">
       <div class="time-box"><b id="tDays">0</b><span>дней</span></div>
@@ -110,130 +111,122 @@
     <p class="time-note reveal">Счётчик тикает прямо сейчас. И останавливаться не собирается.</p>
   </section>
 
-  <section class="section slim" id="stats">
+  <section class="section slim" id="skills">
     <div class="section-head reveal">
       <small>Неофициальные данные</small>
-      <h2>Мама <span class="grad">в цифрах</span></h2>
+      <h2>Характеристики <span class="grad">папы</span></h2>
     </div>
-    <div class="stats">
-      <div class="stat tilt reveal">
-        <div class="glare"></div>
-        <b data-count="1000" data-suffix="+">0</b>
-        <span>раз прозвучало «Ты поел?»</span>
+    <div class="skills">
+      <div class="skill reveal" style="--w:99%">
+        <div class="skill-top"><span>🔧 Починить всё, что сломалось</span><b data-count="99" data-suffix="%">0</b></div>
+        <div class="meter"><i></i></div>
       </div>
-      <div class="stat tilt reveal" style="--d:.1s">
-        <div class="glare"></div>
-        <b data-count="365">0</b>
-        <span>дней в году мама на связи</span>
+      <div class="skill reveal" style="--w:100%;--d:.1s">
+        <div class="skill-top"><span>🔦 Знать, где лежит нужная отвёртка</span><b data-count="100" data-suffix="%">0</b></div>
+        <div class="meter"><i></i></div>
       </div>
-      <div class="stat tilt reveal" style="--d:.2s">
-        <div class="glare"></div>
-        <b data-count="24">0</b>
-        <span>часа в сутки работает радар «что-то не так»</span>
+      <div class="skill reveal" style="--w:95%;--d:.2s">
+        <div class="skill-top"><span>🤔 Сказать «ну, посмотрим» вместо «да»</span><b data-count="95" data-suffix="%">0</b></div>
+        <div class="meter"><i></i></div>
       </div>
-      <div class="stat tilt reveal" style="--d:.3s">
-        <div class="glare"></div>
-        <b data-count="100" data-suffix="%">0</b>
-        <span>попаданий материнской интуиции</span>
+      <div class="skill reveal" style="--w:88%;--d:.3s">
+        <div class="skill-top"><span>😎 Спокойствие, когда я что-то сломал</span><b data-count="88" data-suffix="%">0</b></div>
+        <div class="meter"><i></i></div>
+      </div>
+      <div class="skill reveal" style="--w:100%;--d:.4s">
+        <div class="skill-top"><span>🧠 Совет «я же говорил» в нужный момент</span><b data-count="100" data-suffix="%">0</b></div>
+        <div class="meter"><i></i></div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="game">
+  <section class="section" id="reflex">
     <div class="section-head reveal">
       <small>Мини-игра №1</small>
-      <h2>Лови <span class="grad">сердечки</span></h2>
-      <p class="lead">Двигай корзинку мышкой, пальцем или стрелками. Сердца и цветы дают очки, а брокколи 🥦 отнимает.</p>
+      <h2>Проверь <span class="grad">реакцию</span></h2>
+      <p class="lead">Ждёшь, пока все лампочки станут зелёными, и жмёшь как можно быстрее. Рано нажал — фальстарт. 5 раундов.</p>
+    </div>
+
+    <div class="rx-box reveal">
+      <div class="rx-lights" id="rxLights"><i></i><i></i><i></i><i></i><i></i></div>
+      <button class="rx-pad" id="rxPad">
+        <h3 id="rxTitle">Готов к старту?</h3>
+        <p id="rxText">Нажми сюда, чтобы начать</p>
+      </button>
+      <div class="rx-stats">
+        <div>Раунд: <b id="rxRound">0</b>/5</div>
+        <div>Средняя: <b id="rxAvg">—</b></div>
+        <div>Рекорд: <b id="rxBest">—</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="aim">
+    <div class="section-head reveal">
+      <small>Мини-игра №2</small>
+      <h2>Тир на <span class="grad">меткость</span></h2>
+      <p class="lead">Попадай по 🎯 (+1) и ⭐ (+3). Бомбы 💣 отнимают 3 очка. На всё про всё 20 секунд.</p>
     </div>
 
     <div class="game-box reveal">
       <div class="hud">
-        <div>Очки: <b id="gScore">0</b></div>
-        <div>Время: <b id="gTime">25</b></div>
+        <div>Очки: <b id="aimScore">0</b></div>
+        <div>Время: <b id="aimTime">20</b></div>
       </div>
-      <canvas id="gameCanvas"></canvas>
-      <div class="game-overlay" id="gameOverlay">
-        <h3 id="gameTitle">Готова?</h3>
-        <p id="gameText">У тебя 25 секунд.</p>
-        <button class="btn primary magnetic" id="gameBtn"><span>Играть</span></button>
+      <div class="aim-arena" id="aimArena"></div>
+      <div class="game-overlay" id="aimOverlay">
+        <h3 id="aimTitle">Тир открыт</h3>
+        <p id="aimText">Цели быстро исчезают. Не зевай.</p>
+        <button class="btn primary magnetic" id="aimBtn"><span>Начать</span></button>
       </div>
     </div>
   </section>
 
-  <section class="section" id="memory">
+  <section class="section" id="advice">
     <div class="section-head reveal">
-      <small>Мини-игра №2</small>
-      <h2>Найди <span class="grad">пару</span></h2>
-      <p class="lead">Переворачивай карточки и ищи одинаковые. Чем меньше ходов, тем круче результат.</p>
+      <small>Терминал</small>
+      <h2>Папины <span class="grad">фразы</span></h2>
+      <p class="lead">Генератор фраз, которые знает каждый ребёнок.</p>
     </div>
 
-    <div class="mem-box reveal">
-      <div class="mem-hud">
-        <div>Ходы: <b id="memMoves">0</b></div>
-        <div>Время: <b id="memTime">0</b>с</div>
-        <div>Рекорд: <b id="memBest">—</b></div>
-      </div>
-      <div class="mem-grid" id="memGrid"></div>
-      <p class="mem-msg" id="memMsg">Нажми на любую карточку, чтобы начать</p>
-      <button class="btn ghost magnetic mem-restart" id="memRestart"><span>Заново 🔄</span></button>
-    </div>
-  </section>
-
-  <section class="section" id="ball">
-    <div class="section-head reveal">
-      <small>Магия</small>
-      <h2>Шар <span class="grad">предсказаний</span></h2>
-      <p class="lead">Задай вопрос (можно в мыслях) и нажми на шар.</p>
-    </div>
-
-    <div class="ball-area reveal">
-      <div class="ball-wrap">
-        <div class="ball" id="ball">
-          <div class="ball-win"><span id="ballText">✦</span></div>
+    <div class="advice-box reveal">
+      <div class="terminal">
+        <div class="term-bar"><span></span><span></span><span></span><em>radik@wisdom:~</em></div>
+        <div class="term-body">
+          <span class="prompt">$</span> <span id="advText">Нажми кнопку, чтобы получить мудрость</span><span class="caret">|</span>
         </div>
-        <div class="ball-shadow"></div>
       </div>
-      <div class="ball-ctrl">
-        <input id="ballQ" type="text" placeholder="Например: стоит ли мне купить это платье?" />
-        <button class="btn primary magnetic" id="ballBtn"><span>Спросить шар</span></button>
-      </div>
+      <button class="btn primary magnetic" id="advBtn"><span>Получить фразу 💡</span></button>
     </div>
   </section>
 
-  <section class="section" id="letter">
+  <section class="section" id="secret">
     <div class="section-head reveal">
       <small>Последний сюрприз</small>
-      <h2>Тебе <span class="grad">письмо</span></h2>
+      <h2>Секретный <span class="grad">файл</span></h2>
     </div>
 
-    <div class="envelope-wrap reveal">
-      <div class="envelope" id="envelope">
-        <div class="env-back"></div>
-        <div class="env-letter">Для Эльвины ♥</div>
-        <div class="env-front"></div>
-        <div class="env-flap"></div>
-      </div>
-      <p class="tap-hint" id="tapHint">Нажми на конверт</p>
-
-      <div class="letter-full" id="letterFull">
-        <div class="letter-paper">
-          <p style="--i:0">Мам, я долго думал, что тебе подарить, и понял: вещи ты купишь себе сама, а вот сайт вряд ли :)</p>
-          <p style="--i:1">Поэтому я собрал маленькую вселенную, где всё придумано только для тебя.</p>
-          <p style="--i:2">Спасибо, что всегда рядом, даже когда я упрямый и делаю вид, что мне ничего не нужно.</p>
-          <p style="--i:3">Дальше твоя очередь: поймай все сердечки, найди все пары, спроси шар предсказаний и запусти салют.</p>
-          <p style="--i:4" class="ps">P.S. Всё здесь сделано вручную. Специально для тебя.</p>
-          <button class="btn primary magnetic" id="fireBtn" style="--i:5"><span>🎆 Запустить салют</span></button>
+    <div class="vault reveal">
+      <div class="vault-head">
+        <span class="lock" id="lock">🔐</span>
+        <div>
+          <b>ДЛЯ_РАДИКА.txt</b>
+          <small id="vaultStatus">Статус: зашифровано</small>
         </div>
+      </div>
+      <div class="vault-text" id="vaultText"></div>
+      <div class="vault-actions">
+        <button class="btn primary magnetic" id="decryptBtn"><span>🔓 Расшифровать</span></button>
+        <button class="btn primary magnetic" id="fireBtn"><span>🎆 Запустить салют</span></button>
       </div>
     </div>
   </section>
 
   <footer class="footer">
-    <p>Сделано специально для Эльвины ❤ Жми куда хочешь — тут везде что-то спрятано.</p>
+    <p>Сделано специально для Радика ⚡ Жми куда хочешь, тут везде что-то спрятано.</p>
     <button class="to-top magnetic" id="toTop" aria-label="Наверх">↑</button>
   </footer>
 
-  <script src="script.js?v=3"></script>
-  <script src="game2.js?v=3"></script>
+  <script src="script.js?v=1"></script>
 </body>
 </html>
